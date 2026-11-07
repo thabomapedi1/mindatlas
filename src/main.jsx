@@ -4,11 +4,14 @@ import { BrowserRouter } from 'react-router-dom'
 import './styles/global.css'
 import './styles/layout.css'
 import App from './App.jsx'
+import { KnowledgeProvider } from './store/KnowledgeProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <KnowledgeProvider>
+        <App />
+      </KnowledgeProvider>
     </BrowserRouter>
   </StrictMode>,
 )

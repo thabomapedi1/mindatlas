@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import PlaceholderPage from './components/PlaceholderPage'
+import Overview from './pages/Overview'
 import { navItems } from './data/navItems'
 
 function App() {
@@ -11,7 +12,13 @@ function App() {
           <Route
             key={path}
             path={path}
-            element={<PlaceholderPage title={label} description={description} />}
+            element={
+              path === '/' ? (
+                <Overview />
+              ) : (
+                <PlaceholderPage title={label} description={description} />
+              )
+            }
           />
         ))}
         <Route path="*" element={<Navigate to="/" replace />} />
