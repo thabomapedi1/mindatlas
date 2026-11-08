@@ -93,3 +93,17 @@
 .page-header-row .page-header p {
   margin-bottom: 0;
 }
+
+.panel {
+  margin-bottom: 1rem;
+}
+
+.suggestion-intro {
+  margin: -0.4rem 0 0.5rem;
+  font-size: 0.85rem;
+}
+
+.recent-item .btn {
+  align-self: center;
+  flex-shrink: 0;
+}

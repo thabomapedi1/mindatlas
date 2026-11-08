@@ -3,6 +3,7 @@ import { Lightbulb, Link2, Layers, Plus } from 'lucide-react'
 import StatCard from '../components/StatCard'
 import Modal from '../components/Modal'
 import ConceptForm from '../components/ConceptForm'
+import SuggestedConnections from '../components/SuggestedConnections'
 import { useKnowledge } from '../store/useKnowledge'
 import { formatDate } from '../utils/formatDate'
 import { makeId } from '../utils/makeId'
@@ -51,6 +52,7 @@ function Overview() {
         <StatCard icon={Layers} label="Categories in use" value={categoryCount} />
       </div>
 
+      <SuggestedConnections />
       <div className="panel">
         <h2>Recently created</h2>
         {recentConcepts.length === 0 ? (
