@@ -1,0 +1,32 @@
+.graph-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 4rem);
+}
+
+.graph-page .page-header {
+  flex-shrink: 0;
+}
+
+.graph-canvas {
+  flex: 1;
+  min-height: 0;
+  border: 1px solid #232831;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* TEMPORARY: hide the connection dots until connecting is built (Step 4). */
+.react-flow__handle {
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .graph-page {
+    height: calc(100vh - 6.75rem);
+  }
+
+  .react-flow__minimap {
+    display: none;
+  }
+}

@@ -2,7 +2,14 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import PlaceholderPage from './components/PlaceholderPage'
 import Overview from './pages/Overview'
+import GraphPage from './pages/GraphPage'
 import { navItems } from './data/navItems'
+
+// Pages that are built so far. Anything not listed shows the placeholder.
+const pages = {
+  '/': <Overview />,
+  '/graph': <GraphPage />,
+}
 
 function App() {
   return (
@@ -13,11 +20,7 @@ function App() {
             key={path}
             path={path}
             element={
-              path === '/' ? (
-                <Overview />
-              ) : (
-                <PlaceholderPage title={label} description={description} />
-              )
+              pages[path] ?? <PlaceholderPage title={label} description={description} />
             }
           />
         ))}
