@@ -8,12 +8,24 @@
   flex-shrink: 0;
 }
 
+.graph-workspace {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 1rem;
+}
+
 .graph-canvas {
   flex: 1;
+  min-width: 0;
   min-height: 0;
   border: 1px solid #232831;
   border-radius: 10px;
   overflow: hidden;
+}
+
+.graph-canvas .react-flow__node.selected {
+  box-shadow: 0 0 0 2px #6d8cff;
 }
 
 /* TEMPORARY: hide the connection dots until connecting is built (Step 4). */
@@ -21,9 +33,122 @@
   opacity: 0;
 }
 
+.detail-panel {
+  width: 320px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  background: #14171c;
+  border: 1px solid #232831;
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.detail-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.detail-panel h3 {
+  margin: 1.1rem 0 0.4rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.detail-panel p {
+  margin: 0.5rem 0;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 0.78rem;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tag {
+  padding: 0.1rem 0.55rem;
+  background: #1b1f26;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.relation-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.relation-list li {
+  padding: 0.35rem 0;
+  border-top: 1px solid #1d222a;
+}
+
+.relation-list li:first-child {
+  border-top: none;
+}
+
+.relation-label {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.link-button {
+  padding: 0;
+  background: none;
+  border: none;
+  font: inherit;
+  color: #8aa3ff;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.link-button:focus-visible {
+  outline: 2px solid #6d8cff;
+  outline-offset: 2px;
+}
+
+.detail-dates {
+  margin-top: 1.25rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
 @media (max-width: 768px) {
   .graph-page {
     height: calc(100vh - 6.75rem);
+  }
+
+  .graph-workspace {
+    flex-direction: column;
+  }
+
+  .detail-panel {
+    width: auto;
+    max-height: 45%;
   }
 
   .react-flow__minimap {
