@@ -80,3 +80,16 @@
   color: var(--muted);
   white-space: nowrap;
 }
+
+.page-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+
+.page-header-row .page-header p {
+  margin-bottom: 0;
+}
