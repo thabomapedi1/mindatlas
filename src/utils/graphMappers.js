@@ -1,6 +1,25 @@
 import { getCategoryColor } from '../data/categoryColors'
 
-// Concepts -> React Flow nodes, placed evenly around a circle.
+// One concept -> one React Flow node, at the given position.
+export function conceptToNode(concept, position) {
+  const color = getCategoryColor(concept.category)
+
+  return {
+    id: concept.id,
+    position,
+    data: { label: concept.title, color },
+    style: {
+      background: '#14171c',
+      color: '#e6e8ec',
+      border: `1px solid ${color}`,
+      borderRadius: 8,
+      padding: '8px 12px',
+      fontSize: 13,
+    },
+  }
+}
+
+// All concepts -> nodes, placed evenly around a circle.
 // Sorting by category first keeps related concepts next to each other.
 export function conceptsToNodes(concepts) {
   const ordered = [...concepts].sort(
@@ -10,21 +29,10 @@ export function conceptsToNodes(concepts) {
 
   return ordered.map((concept, index) => {
     const angle = (2 * Math.PI * index) / ordered.length
-    const color = getCategoryColor(concept.category)
-
-    return {
-      id: concept.id,
-      position: { x: radius * Math.cos(angle), y: radius * Math.sin(angle) },
-      data: { label: concept.title, color },
-      style: {
-        background: '#14171c',
-        color: '#e6e8ec',
-        border: `1px solid ${color}`,
-        borderRadius: 8,
-        padding: '8px 12px',
-        fontSize: 13,
-      },
-    }
+    return conceptToNode(concept, {
+      x: radius * Math.cos(angle),
+      y: radius * Math.sin(angle),
+    })
   })
 }
 

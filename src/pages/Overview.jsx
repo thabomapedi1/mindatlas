@@ -5,12 +5,13 @@ import Modal from '../components/Modal'
 import ConceptForm from '../components/ConceptForm'
 import SuggestedConnections from '../components/SuggestedConnections'
 import { useKnowledge } from '../store/useKnowledge'
+import { useConceptActions } from '../store/useConceptActions'
 import { formatDate } from '../utils/formatDate'
-import { makeId } from '../utils/makeId'
 import '../styles/overview.css'
 
 function Overview() {
-  const { concepts, connections, dispatch } = useKnowledge()
+  const { concepts, connections } = useKnowledge()
+  const { createConcept } = useConceptActions()
   const [isCreating, setIsCreating] = useState(false)
 
   const recentConcepts = [...concepts]
@@ -20,16 +21,7 @@ function Overview() {
   const categoryCount = new Set(concepts.map((c) => c.category)).size
 
   function handleCreate(formValues) {
-    const now = new Date().toISOString()
-    dispatch({
-      type: 'ADD_CONCEPT',
-      concept: {
-        id: makeId(formValues.title, concepts.map((c) => c.id)),
-        ...formValues,
-        createdAt: now,
-        updatedAt: now,
-      },
-    })
+    createConcept(formValues)
     setIsCreating(false)
   }
 
@@ -53,6 +45,7 @@ function Overview() {
       </div>
 
       <SuggestedConnections />
+
       <div className="panel">
         <h2>Recently created</h2>
         {recentConcepts.length === 0 ? (

@@ -155,3 +155,8 @@
     display: none;
   }
 }
+
+.graph-page .page-header-row {
+  flex-shrink: 0;
+  margin-bottom: 1rem;
+}
