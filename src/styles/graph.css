@@ -28,9 +28,12 @@
   box-shadow: 0 0 0 2px #6d8cff;
 }
 
-/* TEMPORARY: hide the connection dots until connecting is built (Step 4). */
+/* Connection dots: small but easy to see and grab. */
 .react-flow__handle {
-  opacity: 0;
+  width: 10px;
+  height: 10px;
+  background: #6d8cff;
+  border: none;
 }
 
 .detail-panel {
@@ -159,4 +162,8 @@
 .graph-page .page-header-row {
   flex-shrink: 0;
   margin-bottom: 1rem;
+}
+
+.connection-summary {
+  margin: 0 0 1rem;
 }

@@ -1,23 +1,12 @@
 import { useKnowledge } from '../store/useKnowledge'
+import { useConnectionActions } from '../store/useConnectionActions'
 import { suggestConnections } from '../utils/suggestConnections'
-import { makeId } from '../utils/makeId'
 
 function SuggestedConnections() {
-  const { concepts, connections, dispatch } = useKnowledge()
+  const { concepts, connections } = useKnowledge()
+  const { createConnection } = useConnectionActions()
   const suggestions = suggestConnections(concepts, connections)
   const titleOf = (id) => concepts.find((c) => c.id === id)?.title ?? id
-
-  function handleConnect({ source, target }) {
-    dispatch({
-      type: 'ADD_CONNECTION',
-      connection: {
-        id: makeId(`${source}-${target}`, connections.map((c) => c.id)),
-        source,
-        target,
-        label: 'related to',
-      },
-    })
-  }
 
   return (
     <div className="panel">
@@ -39,7 +28,7 @@ function SuggestedConnections() {
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => handleConnect(suggestion)}
+                onClick={() => createConnection(suggestion.source, suggestion.target)}
                 aria-label={`Connect ${titleOf(suggestion.source)} and ${titleOf(suggestion.target)}`}
               >
                 Connect
