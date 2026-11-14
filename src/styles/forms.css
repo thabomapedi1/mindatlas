@@ -121,3 +121,18 @@
   gap: 0.6rem;
   margin-top: 1.1rem;
 }
+
+.btn-danger {
+  background: #e5636d;
+  color: #0f1115;
+  font-weight: 600;
+}
+
+.btn-danger:hover {
+  background: #ee7d86;
+}
+
+.confirm-message {
+  margin: 0 0 0.5rem;
+  line-height: 1.5;
+}

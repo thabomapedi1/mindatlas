@@ -1,4 +1,4 @@
-import { X } from 'lucide-react'
+import { Trash2, X } from 'lucide-react'
 import { getCategoryColor } from '../data/categoryColors'
 import { formatDate } from '../utils/formatDate'
 
@@ -11,7 +11,16 @@ function CategoryBadge({ category }) {
   )
 }
 
-function ConceptDetailPanel({ concept, concepts, connections, onSelect, onClose }) {
+function ConceptDetailPanel({
+  concept,
+  concepts,
+  connections,
+  onSelect,
+  onClose,
+  onDeleteConcept,
+  onDeleteConnection,
+}) {
+  // Every connection touching this concept, with the concept on the other end.
   const relations = connections
     .filter((c) => c.source === concept.id || c.target === concept.id)
     .map((c) => {
@@ -65,16 +74,26 @@ function ConceptDetailPanel({ concept, concepts, connections, onSelect, onClose 
               </button>
             )
             return (
-              <li key={relation.id}>
-                {relation.outgoing ? (
-                  <>
-                    {concept.title} <span className="relation-label">{relation.label}</span> {otherButton}
-                  </>
-                ) : (
-                  <>
-                    {otherButton} <span className="relation-label">{relation.label}</span> {concept.title}
-                  </>
-                )}
+              <li key={relation.id} className="relation-row">
+                <span>
+                  {relation.outgoing ? (
+                    <>
+                      {concept.title} <span className="relation-label">{relation.label}</span> {otherButton}
+                    </>
+                  ) : (
+                    <>
+                      {otherButton} <span className="relation-label">{relation.label}</span> {concept.title}
+                    </>
+                  )}
+                </span>
+                <button
+                  type="button"
+                  className="icon-button icon-button-danger"
+                  onClick={() => onDeleteConnection(relation.id)}
+                  aria-label={`Delete connection between ${concept.title} and ${relation.other.title}`}
+                >
+                  <Trash2 size={15} aria-hidden="true" />
+                </button>
               </li>
             )
           })}
@@ -95,6 +114,13 @@ function ConceptDetailPanel({ concept, concepts, connections, onSelect, onClose 
       <p className="detail-dates">
         Created {formatDate(concept.createdAt)} · Updated {formatDate(concept.updatedAt)}
       </p>
+
+      <div className="detail-actions">
+        <button type="button" className="btn btn-danger" onClick={onDeleteConcept}>
+          <Trash2 size={16} aria-hidden="true" />
+          Delete concept
+        </button>
+      </div>
     </aside>
   )
 }

@@ -1,7 +1,7 @@
 import { useKnowledge } from './useKnowledge'
 import { makeId } from '../utils/makeId'
 
-// Shared logic for creating connections, used by the graph and the Overview.
+// Shared logic for creating and deleting connections.
 export function useConnectionActions() {
   const { connections, dispatch } = useKnowledge()
 
@@ -17,5 +17,9 @@ export function useConnectionActions() {
     })
   }
 
-  return { createConnection }
+  function deleteConnection(id) {
+    dispatch({ type: 'DELETE_CONNECTION', id })
+  }
+
+  return { createConnection, deleteConnection }
 }

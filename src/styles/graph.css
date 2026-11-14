@@ -167,3 +167,20 @@
 .connection-summary {
   margin: 0 0 1rem;
 }
+
+.relation-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.icon-button-danger:hover {
+  color: #f08790;
+}
+
+.detail-actions {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #232831;
+}

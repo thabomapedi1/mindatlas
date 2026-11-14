@@ -1,7 +1,7 @@
 import { useKnowledge } from './useKnowledge'
 import { makeId } from '../utils/makeId'
 
-// Shared logic for creating concepts, used by the Overview and the graph.
+// Shared logic for creating and deleting concepts.
 export function useConceptActions() {
   const { concepts, dispatch } = useKnowledge()
 
@@ -18,5 +18,10 @@ export function useConceptActions() {
     return concept
   }
 
-  return { createConcept }
+  // The reducer also removes every connection attached to this concept.
+  function deleteConcept(id) {
+    dispatch({ type: 'DELETE_CONCEPT', id })
+  }
+
+  return { createConcept, deleteConcept }
 }
