@@ -1,5 +1,7 @@
-import { Trash2, X } from 'lucide-react'
+import { useState } from 'react'
+import { Pencil, Trash2, X } from 'lucide-react'
 import { getCategoryColor } from '../data/categoryColors'
+import { canConnect } from '../utils/connectionRules'
 import { formatDate } from '../utils/formatDate'
 
 function CategoryBadge({ category }) {
@@ -18,8 +20,12 @@ function ConceptDetailPanel({
   onSelect,
   onClose,
   onDeleteConcept,
+  onAddConnection,
+  onEditConnection,
   onDeleteConnection,
 }) {
+  const [targetId, setTargetId] = useState('')
+
   // Every connection touching this concept, with the concept on the other end.
   const relations = connections
     .filter((c) => c.source === concept.id || c.target === concept.id)
@@ -33,6 +39,18 @@ function ConceptDetailPanel({
   const relatedCategories = [...new Set(relations.map((r) => r.other.category))].filter(
     (category) => category !== concept.category,
   )
+
+  // Concepts this one could still be connected to.
+  const available = concepts
+    .filter((c) => c.id !== concept.id && canConnect(connections, concept.id, c.id))
+    .sort((a, b) => a.title.localeCompare(b.title))
+  const hasChoice = available.some((c) => c.id === targetId)
+
+  function handleAdd() {
+    if (!hasChoice) return
+    onAddConnection(targetId)
+    setTargetId('')
+  }
 
   return (
     <aside className="detail-panel" aria-label="Concept details">
@@ -86,18 +104,54 @@ function ConceptDetailPanel({
                     </>
                   )}
                 </span>
-                <button
-                  type="button"
-                  className="icon-button icon-button-danger"
-                  onClick={() => onDeleteConnection(relation.id)}
-                  aria-label={`Delete connection between ${concept.title} and ${relation.other.title}`}
-                >
-                  <Trash2 size={15} aria-hidden="true" />
-                </button>
+                <span className="relation-actions">
+                  <button
+                    type="button"
+                    className="icon-button"
+                    onClick={() => onEditConnection(relation.id)}
+                    aria-label={`Edit label of connection between ${concept.title} and ${relation.other.title}`}
+                  >
+                    <Pencil size={15} aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    className="icon-button icon-button-danger"
+                    onClick={() => onDeleteConnection(relation.id)}
+                    aria-label={`Delete connection between ${concept.title} and ${relation.other.title}`}
+                  >
+                    <Trash2 size={15} aria-hidden="true" />
+                  </button>
+                </span>
               </li>
             )
           })}
         </ul>
+      )}
+
+      <h3>Add connection</h3>
+      {available.length === 0 ? (
+        <p className="muted">Already connected to every other concept.</p>
+      ) : (
+        <div className="add-connection">
+          <label htmlFor="add-connection-target" className="visually-hidden">
+            Concept to connect to
+          </label>
+          <select
+            id="add-connection-target"
+            value={targetId}
+            onChange={(event) => setTargetId(event.target.value)}
+          >
+            <option value="">Choose a concept…</option>
+            {available.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.title}
+              </option>
+            ))}
+          </select>
+          <button type="button" className="btn btn-secondary" onClick={handleAdd} disabled={!hasChoice}>
+            Connect
+          </button>
+        </div>
       )}
 
       {relatedCategories.length > 0 && (

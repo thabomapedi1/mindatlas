@@ -184,3 +184,44 @@
   padding-top: 1rem;
   border-top: 1px solid #232831;
 }
+
+.relation-actions {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.add-connection {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.add-connection select {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  background: #0f1115;
+  color: var(--text);
+  border: 1px solid #2c3340;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.add-connection select:focus-visible {
+  outline: 2px solid #6d8cff;
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

@@ -18,13 +18,14 @@ import '../styles/graph.css'
 function GraphPage() {
   const { concepts, connections } = useKnowledge()
   const { createConcept, deleteConcept } = useConceptActions()
-  const { createConnection, deleteConnection } = useConnectionActions()
+  const { createConnection, updateConnectionLabel, deleteConnection } = useConnectionActions()
 
   const [nodes, setNodes, onNodesChange] = useNodesState(conceptsToNodes(concepts))
   const [selectedId, setSelectedId] = useState(null)
   const [flowInstance, setFlowInstance] = useState(null)
   const [isCreating, setIsCreating] = useState(false)
   const [pendingConnection, setPendingConnection] = useState(null)
+  const [pendingEdit, setPendingEdit] = useState(null)
   const [pendingDelete, setPendingDelete] = useState(null)
   const canvasRef = useRef(null)
 
@@ -32,6 +33,7 @@ function GraphPage() {
   const selectedConcept = concepts.find((c) => c.id === selectedId) ?? null
   const titleOf = (id) => concepts.find((c) => c.id === id)?.title ?? id
 
+  const editingConnection = connections.find((c) => c.id === pendingEdit) ?? null
   const pendingDeleteConcept = concepts.find((c) => c.id === pendingDelete) ?? null
   const pendingDeleteLinks = pendingDeleteConcept
     ? connections.filter((c) => c.source === pendingDelete || c.target === pendingDelete).length
@@ -55,14 +57,24 @@ function GraphPage() {
     [connections],
   )
 
-  // The drag finished on a valid target: ask for a label before saving.
+  // A drag finished on a valid target: ask for a label before saving.
   const handleConnect = useCallback((connection) => {
     setPendingConnection({ source: connection.source, target: connection.target })
   }, [])
 
+  // The panel's "Add connection" uses the same label pop-up as dragging.
+  function handleAddFromPanel(targetId) {
+    setPendingConnection({ source: selectedConcept.id, target: targetId })
+  }
+
   function handleConfirmConnection(label) {
     createConnection(pendingConnection.source, pendingConnection.target, label)
     setPendingConnection(null)
+  }
+
+  function handleConfirmEdit(label) {
+    updateConnectionLabel(pendingEdit, label)
+    setPendingEdit(null)
   }
 
   // Removes the concept from the store AND the node from the graph's own list.
@@ -112,7 +124,8 @@ function GraphPage() {
         <header className="page-header">
           <h1>Knowledge Graph</h1>
           <p className="muted">
-            Click a node for details. To connect, drag from a node's bottom dot to another node's top dot.
+            Click a node for details. To connect, drag from a node's bottom dot to another node's top dot,
+            or use "Add connection" in the panel.
           </p>
         </header>
         <button type="button" className="btn btn-primary" onClick={() => setIsCreating(true)}>
@@ -149,12 +162,15 @@ function GraphPage() {
 
           {selectedConcept && (
             <ConceptDetailPanel
+              key={selectedConcept.id}
               concept={selectedConcept}
               concepts={concepts}
               connections={connections}
               onSelect={selectNode}
               onClose={() => selectNode(null)}
               onDeleteConcept={() => setPendingDelete(selectedConcept.id)}
+              onAddConnection={handleAddFromPanel}
+              onEditConnection={setPendingEdit}
               onDeleteConnection={deleteConnection}
             />
           )}
@@ -179,6 +195,19 @@ function GraphPage() {
             toTitle={titleOf(pendingConnection.target)}
             onSubmit={handleConfirmConnection}
             onCancel={() => setPendingConnection(null)}
+          />
+        </Modal>
+      )}
+
+      {editingConnection && (
+        <Modal title="Edit connection" onClose={() => setPendingEdit(null)}>
+          <ConnectionForm
+            fromTitle={titleOf(editingConnection.source)}
+            toTitle={titleOf(editingConnection.target)}
+            initialLabel={editingConnection.label}
+            submitLabel="Save label"
+            onSubmit={handleConfirmEdit}
+            onCancel={() => setPendingEdit(null)}
           />
         </Modal>
       )}

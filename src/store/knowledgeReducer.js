@@ -28,6 +28,14 @@ export function knowledgeReducer(state, action) {
     case 'ADD_CONNECTION':
       return { ...state, connections: [...state.connections, action.connection] }
 
+    case 'UPDATE_CONNECTION':
+      return {
+        ...state,
+        connections: state.connections.map((connection) =>
+          connection.id === action.id ? { ...connection, ...action.changes } : connection,
+        ),
+      }
+
     case 'DELETE_CONNECTION':
       return {
         ...state,

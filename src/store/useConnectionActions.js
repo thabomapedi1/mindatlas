@@ -1,7 +1,7 @@
 import { useKnowledge } from './useKnowledge'
 import { makeId } from '../utils/makeId'
 
-// Shared logic for creating and deleting connections.
+// Shared logic for creating, editing and deleting connections.
 export function useConnectionActions() {
   const { connections, dispatch } = useKnowledge()
 
@@ -17,9 +17,13 @@ export function useConnectionActions() {
     })
   }
 
+  function updateConnectionLabel(id, label) {
+    dispatch({ type: 'UPDATE_CONNECTION', id, changes: { label } })
+  }
+
   function deleteConnection(id) {
     dispatch({ type: 'DELETE_CONNECTION', id })
   }
 
-  return { createConnection, deleteConnection }
+  return { createConnection, updateConnectionLabel, deleteConnection }
 }

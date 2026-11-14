@@ -1,7 +1,14 @@
 import { useState } from 'react'
 
-function ConnectionForm({ fromTitle, toTitle, onSubmit, onCancel }) {
-  const [label, setLabel] = useState('related to')
+function ConnectionForm({
+  fromTitle,
+  toTitle,
+  initialLabel = 'related to',
+  submitLabel = 'Create connection',
+  onSubmit,
+  onCancel,
+}) {
+  const [label, setLabel] = useState(initialLabel)
   const [error, setError] = useState('')
 
   function handleSubmit(event) {
@@ -48,7 +55,7 @@ function ConnectionForm({ fromTitle, toTitle, onSubmit, onCancel }) {
           Cancel
         </button>
         <button type="submit" className="btn btn-primary">
-          Create connection
+          {submitLabel}
         </button>
       </div>
     </form>
