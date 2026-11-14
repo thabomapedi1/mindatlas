@@ -1,17 +1,8 @@
 import { useState } from 'react'
 import { Pencil, Trash2, X } from 'lucide-react'
-import { getCategoryColor } from '../data/categoryColors'
+import CategoryBadge from './CategoryBadge'
 import { canConnect } from '../utils/connectionRules'
 import { formatDate } from '../utils/formatDate'
-
-function CategoryBadge({ category }) {
-  const color = getCategoryColor(category)
-  return (
-    <span className="category-badge" style={{ borderColor: color, color }}>
-      {category}
-    </span>
-  )
-}
 
 function ConceptDetailPanel({
   concept,

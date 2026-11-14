@@ -3,12 +3,14 @@ import Layout from './components/Layout'
 import PlaceholderPage from './components/PlaceholderPage'
 import Overview from './pages/Overview'
 import GraphPage from './pages/GraphPage'
+import LibraryPage from './pages/LibraryPage'
 import { navItems } from './data/navItems'
 
 // Pages that are built so far. Anything not listed shows the placeholder.
 const pages = {
   '/': <Overview />,
   '/graph': <GraphPage />,
+  '/library': <LibraryPage />,
 }
 
 function App() {

@@ -1,0 +1,102 @@
+.search-field {
+  position: relative;
+  max-width: 480px;
+  margin-bottom: 0.75rem;
+}
+
+.search-field input {
+  width: 100%;
+  padding: 0.65rem 2.5rem 0.65rem 2.4rem;
+  background: #14171c;
+  color: var(--text);
+  border: 1px solid #2c3340;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.search-field input:focus-visible {
+  outline: 2px solid #6d8cff;
+  outline-offset: 2px;
+}
+
+/* We draw our own clear button, so hide the browser's. */
+.search-field input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.search-clear {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.result-count {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+}
+
+.concept-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.75rem;
+}
+
+.concept-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.1rem;
+  background: #14171c;
+  border: 1px solid #232831;
+  border-radius: 10px;
+}
+
+.concept-card h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.concept-card p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.concept-card .category-badge {
+  align-self: flex-start;
+}
+
+.concept-card .tag-list {
+  margin-top: auto;
+}
+
+.concept-card-date {
+  font-size: 0.78rem;
+}
+
+.empty-state {
+  padding: 2rem 1rem;
+  text-align: center;
+  background: #14171c;
+  border: 1px dashed #2c3340;
+  border-radius: 10px;
+}
+
+.empty-state p {
+  margin: 0 0 1rem;
+}
