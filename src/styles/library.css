@@ -100,3 +100,71 @@
 .empty-state p {
   margin: 0 0 1rem;
 }
+
+.library-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.library-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.library-layout .detail-panel {
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+}
+
+.concept-card {
+  position: relative;
+}
+
+.concept-card:hover {
+  border-color: #2c3340;
+}
+
+.concept-card.selected {
+  border-color: #6d8cff;
+}
+
+/* The title button stretches over the whole card, so the card is one big click target. */
+.card-title-button {
+  padding: 0;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.card-title-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+}
+
+.card-title-button:focus-visible {
+  outline: none;
+}
+
+.card-title-button:focus-visible::after {
+  outline: 2px solid #6d8cff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .library-layout {
+    flex-direction: column;
+  }
+
+  .library-layout .detail-panel {
+    position: static;
+    width: 100%;
+    max-height: none;
+  }
+}

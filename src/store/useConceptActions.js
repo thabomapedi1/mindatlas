@@ -1,7 +1,7 @@
 import { useKnowledge } from './useKnowledge'
 import { makeId } from '../utils/makeId'
 
-// Shared logic for creating and deleting concepts.
+// Shared logic for creating, editing and deleting concepts.
 export function useConceptActions() {
   const { concepts, dispatch } = useKnowledge()
 
@@ -18,10 +18,19 @@ export function useConceptActions() {
     return concept
   }
 
+  // The id never changes, even if the title does, so connections stay valid.
+  function updateConcept(id, formValues) {
+    dispatch({
+      type: 'UPDATE_CONCEPT',
+      id,
+      changes: { ...formValues, updatedAt: new Date().toISOString() },
+    })
+  }
+
   // The reducer also removes every connection attached to this concept.
   function deleteConcept(id) {
     dispatch({ type: 'DELETE_CONCEPT', id })
   }
 
-  return { createConcept, deleteConcept }
+  return { createConcept, updateConcept, deleteConcept }
 }

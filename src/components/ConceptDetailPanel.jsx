@@ -10,6 +10,7 @@ function ConceptDetailPanel({
   connections,
   onSelect,
   onClose,
+  onEditConcept,
   onDeleteConcept,
   onAddConnection,
   onEditConnection,
@@ -160,7 +161,11 @@ function ConceptDetailPanel({
         Created {formatDate(concept.createdAt)} · Updated {formatDate(concept.updatedAt)}
       </p>
 
-      <div className="detail-actions">
+            <div className="detail-actions">
+        <button type="button" className="btn btn-secondary" onClick={onEditConcept}>
+          <Pencil size={16} aria-hidden="true" />
+          Edit concept
+        </button>
         <button type="button" className="btn btn-danger" onClick={onDeleteConcept}>
           <Trash2 size={16} aria-hidden="true" />
           Delete concept

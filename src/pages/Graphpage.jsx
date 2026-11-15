@@ -2,9 +2,8 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { ReactFlow, Background, Controls, MiniMap, useNodesState } from '@xyflow/react'
 import { Plus } from 'lucide-react'
 import '@xyflow/react/dist/style.css'
-import ConceptDetailPanel from '../components/ConceptDetailPanel'
 import ConceptForm from '../components/ConceptForm'
-import ConfirmDialog from '../components/ConfirmDialog'
+import ConceptPanel from '../components/ConceptPanel'
 import ConnectionForm from '../components/ConnectionForm'
 import Modal from '../components/Modal'
 import { useKnowledge } from '../store/useKnowledge'
@@ -17,27 +16,19 @@ import '../styles/graph.css'
 
 function GraphPage() {
   const { concepts, connections } = useKnowledge()
-  const { createConcept, deleteConcept } = useConceptActions()
-  const { createConnection, updateConnectionLabel, deleteConnection } = useConnectionActions()
+  const { createConcept } = useConceptActions()
+  const { createConnection } = useConnectionActions()
 
   const [nodes, setNodes, onNodesChange] = useNodesState(conceptsToNodes(concepts))
   const [selectedId, setSelectedId] = useState(null)
   const [flowInstance, setFlowInstance] = useState(null)
   const [isCreating, setIsCreating] = useState(false)
   const [pendingConnection, setPendingConnection] = useState(null)
-  const [pendingEdit, setPendingEdit] = useState(null)
-  const [pendingDelete, setPendingDelete] = useState(null)
   const canvasRef = useRef(null)
 
   const edges = useMemo(() => connectionsToEdges(connections), [connections])
   const selectedConcept = concepts.find((c) => c.id === selectedId) ?? null
   const titleOf = (id) => concepts.find((c) => c.id === id)?.title ?? id
-
-  const editingConnection = connections.find((c) => c.id === pendingEdit) ?? null
-  const pendingDeleteConcept = concepts.find((c) => c.id === pendingDelete) ?? null
-  const pendingDeleteLinks = pendingDeleteConcept
-    ? connections.filter((c) => c.source === pendingDelete || c.target === pendingDelete).length
-    : 0
 
   // Mouse: clicking a node opens its panel, clicking empty space closes it.
   const handleNodeClick = useCallback((_event, node) => setSelectedId(node.id), [])
@@ -62,27 +53,27 @@ function GraphPage() {
     setPendingConnection({ source: connection.source, target: connection.target })
   }, [])
 
-  // The panel's "Add connection" uses the same label pop-up as dragging.
-  function handleAddFromPanel(targetId) {
-    setPendingConnection({ source: selectedConcept.id, target: targetId })
-  }
-
   function handleConfirmConnection(label) {
     createConnection(pendingConnection.source, pendingConnection.target, label)
     setPendingConnection(null)
   }
 
-  function handleConfirmEdit(label) {
-    updateConnectionLabel(pendingEdit, label)
-    setPendingEdit(null)
+  // The panel edited a concept: refresh that node's label and colour,
+  // keeping its position and selection.
+  function handleEdited(updated) {
+    setNodes((current) =>
+      current.map((node) => {
+        if (node.id !== updated.id) return node
+        const fresh = conceptToNode(updated, node.position)
+        return { ...node, data: fresh.data, style: fresh.style }
+      }),
+    )
   }
 
-  // Removes the concept from the store AND the node from the graph's own list.
-  function handleConfirmDelete() {
-    deleteConcept(pendingDelete)
-    setNodes((current) => current.filter((node) => node.id !== pendingDelete))
+  // The panel deleted a concept: remove its node from the graph's own list.
+  function handleDeleted(id) {
+    setNodes((current) => current.filter((node) => node.id !== id))
     setSelectedId(null)
-    setPendingDelete(null)
   }
 
   // Selects one node (or none, when id is null) and zooms to it.
@@ -161,17 +152,13 @@ function GraphPage() {
           </div>
 
           {selectedConcept && (
-            <ConceptDetailPanel
+            <ConceptPanel
               key={selectedConcept.id}
               concept={selectedConcept}
-              concepts={concepts}
-              connections={connections}
               onSelect={selectNode}
               onClose={() => selectNode(null)}
-              onDeleteConcept={() => setPendingDelete(selectedConcept.id)}
-              onAddConnection={handleAddFromPanel}
-              onEditConnection={setPendingEdit}
-              onDeleteConnection={deleteConnection}
+              onEdited={handleEdited}
+              onDeleted={handleDeleted}
             />
           )}
         </div>
@@ -195,34 +182,6 @@ function GraphPage() {
             toTitle={titleOf(pendingConnection.target)}
             onSubmit={handleConfirmConnection}
             onCancel={() => setPendingConnection(null)}
-          />
-        </Modal>
-      )}
-
-      {editingConnection && (
-        <Modal title="Edit connection" onClose={() => setPendingEdit(null)}>
-          <ConnectionForm
-            fromTitle={titleOf(editingConnection.source)}
-            toTitle={titleOf(editingConnection.target)}
-            initialLabel={editingConnection.label}
-            submitLabel="Save label"
-            onSubmit={handleConfirmEdit}
-            onCancel={() => setPendingEdit(null)}
-          />
-        </Modal>
-      )}
-
-      {pendingDeleteConcept && (
-        <Modal title="Delete concept" onClose={() => setPendingDelete(null)}>
-          <ConfirmDialog
-            message={`Delete "${pendingDeleteConcept.title}"?${
-              pendingDeleteLinks > 0
-                ? ` This also removes ${pendingDeleteLinks} connection${pendingDeleteLinks === 1 ? '' : 's'}.`
-                : ''
-            } This cannot be undone.`}
-            confirmLabel="Delete concept"
-            onConfirm={handleConfirmDelete}
-            onCancel={() => setPendingDelete(null)}
           />
         </Modal>
       )}
